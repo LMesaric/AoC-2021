@@ -4,9 +4,9 @@
 
 std::vector<int32_t> parseInput() {
     std::vector<int32_t> depths;
-    std::string line;
-    while (std::getline(std::cin, line)) {
-        depths.push_back(std::stoi(line));
+    int32_t depth;
+    while (std::cin >> depth) {
+        depths.push_back(depth);
     }
     return depths;
 }
