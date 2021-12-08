@@ -60,74 +60,64 @@ bool isContained(const std::string &smaller, const std::string &larger) {
                                [&](const char c) { return isCharInString(c, larger); });
 }
 
-int findThree(const Task &task, const std::string &seven) {
+int findThree(const Task &task, const int sevenPos) {
     for (int i = 3; i <= 5; ++i)  // numbers 2, 3, 5 (size 5)
-        if (isContained(seven, task.inputs[i]))
+        if (isContained(task.inputs[sevenPos], task.inputs[i]))
             return i;
     return -1;  // will not happen
 }
 
-int findFive(const Task &task, const std::string &six) {
+int findFive(const Task &task, const int sixPos) {
     for (int i = 3; i <= 5; ++i)  // numbers 2, 3, 5 (size 5)
-        if (isContained(task.inputs[i], six))
+        if (isContained(task.inputs[i], task.inputs[sixPos]))
             return i;
     return -1;  // will not happen
 }
 
-int findSix(const Task &task, const std::string &one) {
+int findSix(const Task &task, const int onePos) {
     for (int i = 6; i <= 8; ++i)  // numbers 0, 6, 9 (size 6)
-        if (!isContained(one, task.inputs[i]))
+        if (!isContained(task.inputs[onePos], task.inputs[i]))
             return i;
     return -1;  // will not happen
 }
 
-int findNine(const Task &task, const std::string &four) {
+int findNine(const Task &task, const int fourPos) {
     for (int i = 6; i <= 8; ++i)  // numbers 0, 6, 9 (size 6)
-        if (isContained(four, task.inputs[i]))
+        if (isContained(task.inputs[fourPos], task.inputs[i]))
             return i;
     return -1;  // will not happen
 }
 
-int32_t parseNumber(const Task &task, const std::string *decoded[N]) {
+int32_t parseNumber(const Task &task, const int decoded[N]) {
     int32_t num = 0;
     for (const auto &str: task.outputs)
         for (int i = 0; i < N; ++i)
-            if (*decoded[i] == str) {
+            if (task.inputs[decoded[i]] == str) {
                 num = num * 10 + i;
                 break;
             }
     return num;
 }
 
-void decodeTask(const Task &task, const std::string *decoded[N]) {
-    decoded[1] = &task.inputs[0];  // size 2
-    decoded[7] = &task.inputs[1];  // size 3
-    decoded[4] = &task.inputs[2];  // size 4
-    decoded[8] = &task.inputs[9];  // size 7
+void decodeTask(const Task &task, int decoded[N]) {
+    decoded[1] = 0;  // size 2
+    decoded[7] = 1;  // size 3
+    decoded[4] = 2;  // size 4
+    decoded[8] = 9;  // size 7
 
-    auto threePos = findThree(task, *decoded[7]);
-    decoded[3] = &task.inputs[threePos];
+    decoded[3] = findThree(task, decoded[7]);
+    decoded[6] = findSix(task, decoded[1]);
+    decoded[5] = findFive(task, decoded[6]);
+    decoded[9] = findNine(task, decoded[4]);
 
-    auto sixPos = findSix(task, *decoded[1]);
-    decoded[6] = &task.inputs[sixPos];
-
-    auto fivePos = findFive(task, *decoded[6]);
-    decoded[5] = &task.inputs[fivePos];
-
-    auto ninePos = findNine(task, *decoded[4]);
-    decoded[9] = &task.inputs[ninePos];
-
-    auto zeroPos = 21 - sixPos - ninePos;
-    decoded[0] = &task.inputs[zeroPos];
-
-    auto twoPos = 12 - threePos - fivePos;
-    decoded[2] = &task.inputs[twoPos];
+    decoded[0] = 21 - decoded[6] - decoded[9];
+    decoded[2] = 12 - decoded[3] - decoded[5];
 }
 
 int32_t calculateSecondTask(const std::vector<Task> &tasks) {
     int32_t sum = 0;
     for (const auto &task: tasks) {
-        const std::string *decoded[N];  // number to encoding
+        int decoded[N];
         decodeTask(task, decoded);
         sum += parseNumber(task, decoded);
     }
