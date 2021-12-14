@@ -1,8 +1,8 @@
 .idea/
+build/
 
-
-# Created by https://www.toptal.com/developers/gitignore/api/clion,c++
-# Edit at https://www.toptal.com/developers/gitignore?templates=clion,c++
+# Created by https://www.toptal.com/developers/gitignore/api/clion,c++,cmake,ninja
+# Edit at https://www.toptal.com/developers/gitignore?templates=clion,c++,cmake,ninja
 
 ### C++ ###
 # Prerequisites
@@ -144,4 +144,25 @@ fabric.properties
 # https://plugins.jetbrains.com/plugin/12206-codestream
 .idea/codestream.xml
 
-# End of https://www.toptal.com/developers/gitignore/api/clion,c++
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+### CMake Patch ###
+# External projects
+*-prefix/
+
+### Ninja ###
+.ninja_deps
+.ninja_log
+
+# End of https://www.toptal.com/developers/gitignore/api/clion,c++,cmake,ninja
